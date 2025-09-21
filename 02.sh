@@ -13,9 +13,6 @@ NC='\033[0m'
 ##end
 
 echo -e "${GREEN}=== 开始批量部署OpenVPN ===${NC}"
-echo -e "\n"
-echo -e "${YELLOW=}=== 端口模式随机端口 ===${NC}"
-echo -e "\n"
 
 # 检查参数
 if [ $# -eq 0 ]; then
@@ -75,7 +72,7 @@ cat > deploy_openvpn.yml << 'EOF'
         export APPROVE_IP=y
         export IPV6_SUPPORT=n
         export PORT_CHOICE=1
-        export PROTOCOL_CHOICE=3
+        export PROTOCOL_CHOICE=1
         export DNS=1
         export COMPRESSION_ENABLED=n
         export CUSTOMIZE_ENC=n
@@ -168,49 +165,28 @@ cat > uninstall_openvpn.yml << 'EOF'
   hosts: openvpn_servers
   become: yes
   tasks:
-    - name: 执行卸载（自动选择卸载选项）
+    - name: 执行自动卸载
       shell: |
-        if [ -f /tmp/openvpn-install.sh ]; then
-          echo -e "3\ny" | /tmp/openvpn-install.sh
-        else
-          curl -sSL https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh -o /tmp/openvpn-install.sh
-          chmod +x /tmp/openvpn-install.sh
-          echo -e "3\ny" | /tmp/openvpn-install.sh
-        fi
+        curl -sSL https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh -o /tmp/uninstall.sh
+        chmod +x /tmp/uninstall.sh
+        printf "3\ny\n" | /tmp/uninstall.sh
+        rm -f /tmp/uninstall.sh
       args:
         executable: /bin/bash
       ignore_errors: yes
 
-    - name: 清理服务器残留文件
+    - name: 彻底清理OpenVPN相关文件
       file:
         path: "{{ item }}"
         state: absent
       loop:
         - /etc/openvpn
         - /root/*.ovpn
+        - /root/client.ovpn
+        - /opt/openvpn
         - /tmp/openvpn-install.sh
-
-- name: 清理本地配置文件
-  hosts: localhost
-  connection: local
-  tasks:
-    - name: 删除本地Ansible配置和脚本文件
-      file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - ansible_inventory.ini
-        - client-all.ovpn
-        - deploy_openvpn.yml
-        - manage_openvpn.sh
-        - merge_ovpn.sh
-        - ovpn_configs
-        - uninstall_openvpn.yml
-        - vpn.txt
-    - name: 显示清理结果
-      debug:
-        msg: "OpenVPN卸载完成，本地配置文件已清理"
-
+        - /tmp/uninstall.sh
+        - /usr/local/bin/openvpn-install.sh
 EOF
 
 echo -e "${BLUE}4. 创建管理脚本...${NC}"
@@ -220,16 +196,16 @@ cat > manage_openvpn.sh << 'EOF'
 
 case "$1" in
     status)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl status openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl status openvpn"
         ;;
     start)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl start openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl start openvpn"
         ;;
     stop)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl stop openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl stop openvpn"
         ;;
     restart)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl restart openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl restart openvpn"
         ;;
     uninstall)
         echo "正在卸载OpenVPN..."
@@ -263,3 +239,4 @@ echo -e "  ${GREEN}./manage_openvpn.sh uninstall${NC} # 卸载OpenVPN"
 echo ""
 echo -e "${BLUE}合并的客户端配置文件: ${GREEN}./vpn.txt${NC}"
 sz ./vpn.txt
+
