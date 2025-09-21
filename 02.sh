@@ -186,16 +186,16 @@ cat > manage_openvpn.sh << 'EOF'
 
 case "$1" in
     status)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl status openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl status openvpn@server.service"
         ;;
     start)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl start openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl start openvpn@server.service"
         ;;
     stop)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl stop openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl stop openvpn@server.service"
         ;;
     restart)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl restart openvpn-server@server.service"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl restart openvpn@server.service"
         ;;
     uninstall)
         echo "正在卸载OpenVPN..."
