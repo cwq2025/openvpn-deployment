@@ -199,7 +199,7 @@ case "$1" in
     uninstall)
         echo "正在卸载OpenVPN..."
         ansible-playbook -i ansible_inventory.ini uninstall_openvpn.yml
-		rm -f ansible_inventory.ini client-all.ovpn deploy_openvpn.yml manage_openvpn.sh merge_ovpn.sh ovpn_configs uninstall_openvpn.yml vpn.txt
+		rm -rf ansible_inventory.ini client-all.ovpn deploy_openvpn.yml manage_openvpn.sh merge_ovpn.sh ovpn_configs uninstall_openvpn.yml vpn.txt
         ;;
     *)
         echo "用法: $0 {status|start|stop|restart|uninstall}"
