@@ -13,6 +13,9 @@ NC='\033[0m'
 ##end
 
 echo -e "${GREEN}=== 开始批量部署OpenVPN ===${NC}"
+echo -e "\n"
+echo -e "${YELLOW=}=== 端口模式随机端口 ===${NC}"
+echo -e "\n"
 
 # 检查参数
 if [ $# -eq 0 ]; then
@@ -72,7 +75,7 @@ cat > deploy_openvpn.yml << 'EOF'
         export APPROVE_IP=y
         export IPV6_SUPPORT=n
         export PORT_CHOICE=1
-        export PROTOCOL_CHOICE=1
+        export PROTOCOL_CHOICE=3
         export DNS=1
         export COMPRESSION_ENABLED=n
         export CUSTOMIZE_ENC=n
