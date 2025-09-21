@@ -303,4 +303,5 @@ echo -e "  ${GREEN}./manage_openvpn.sh uninstall${NC} # 卸载OpenVPN"
 echo ""
 echo -e "${BLUE}合并的客户端配置文件: ${GREEN}./vpn.txt${NC}"
 
+sz ./vpn.txt
 
