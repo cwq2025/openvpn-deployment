@@ -301,5 +301,6 @@ echo -e "  ${GREEN}./manage_openvpn.sh stop${NC}      # 停止服务"
 echo -e "  ${GREEN}./manage_openvpn.sh restart${NC}   # 重启服务"
 echo -e "  ${GREEN}./manage_openvpn.sh uninstall${NC} # 卸载OpenVPN"
 echo ""
-echo -e "${BLUE}合并的客户端配置文件: ${GREEN}/root/vpn.txt${NC}"
+echo -e "${BLUE}合并的客户端配置文件: ${GREEN}./vpn.txt${NC}"
+
 
