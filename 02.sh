@@ -168,12 +168,12 @@ cat > uninstall_openvpn.yml << 'EOF'
     - name: 执行卸载
       shell: |
         if [ -f /tmp/openvpn-install.sh ]; then
-          printf "3\ny\n" | /tmp/uninstall.sh
+          printf "3\ny\n" | /tmp/openvpn-install.sh
         else
           curl -sSL https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh -o /tmp/openvpn-install.sh
           chmod +x /tmp/openvpn-install.sh
-          printf "3\ny\n" | /tmp/uninstall.sh
-		  rm -f ansible_inventory.ini client-all.ovpn deploy_openvpn.yml manage_openvpn.sh merge_ovpn.sh ovpn_configs uninstall_openvpn.yml vpn.txt
+          printf "3\ny\n" | /tmp/openvpn-install.sh
+          rm -f ansible_inventory.ini client-all.ovpn deploy_openvpn.yml manage_openvpn.sh merge_ovpn.sh ovpn_configs uninstall_openvpn.yml vpn.txt
         fi
       args:
         executable: /bin/bash
