@@ -133,3 +133,5 @@ echo -e "${GREEN}=== Ansible和SSH互信配置完成 ===${NC}"
 echo -e "\n"
 echo -e "${YELLOW}总用时: ${minutes}分${seconds}秒${NC}"
 echo -e "\n"
+
+./02.sh ansible_inventory.ini
