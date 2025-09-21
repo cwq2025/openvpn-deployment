@@ -164,7 +164,6 @@ ansible-playbook -i "$INVENTORY_FILE" deploy_openvpn.yml
 echo -e "${BLUE}3. 创建卸载脚本...${NC}"
 cat > uninstall_openvpn.yml << 'EOF'
 ---
----
 - name: 卸载OpenVPN
   hosts: openvpn_servers
   become: yes
