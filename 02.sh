@@ -206,29 +206,11 @@ cat > uninstall_openvpn.yml << 'EOF'
         - merge_ovpn.sh
         - ovpn_configs
         - uninstall_openvpn.yml
-        - /root/vpn.txt
-        - /root/port-info.txt
-
-    - name: 清理临时目录
-      file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - /tmp/ovpn-configs
-        - /tmp/port_info
-        - ./ovpn_configs
-        - ./port_info
-
+        - vpn.txt
     - name: 显示清理结果
       debug:
         msg: "OpenVPN卸载完成，本地配置文件已清理"
-        
-    - name: 清理SSH公钥（从目标服务器删除本机的公钥）
-      authorized_key:
-        user: root
-        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-        state: absent
-      ignore_errors: yes
+
 EOF
 
 echo -e "${BLUE}4. 创建管理脚本...${NC}"
