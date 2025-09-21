@@ -72,7 +72,7 @@ cat > deploy_openvpn.yml << 'EOF'
         export APPROVE_IP=y
         export IPV6_SUPPORT=n
         export PORT_CHOICE=1
-        export PROTOCOL_CHOICE=3
+        export PROTOCOL_CHOICE=1
         export DNS=1
         export COMPRESSION_ENABLED=n
         export CUSTOMIZE_ENC=n
@@ -161,6 +161,7 @@ ansible-playbook -i "$INVENTORY_FILE" deploy_openvpn.yml
 echo -e "${BLUE}3. 创建卸载脚本...${NC}"
 cat > uninstall_openvpn.yml << 'EOF'
 ---
+---
 - name: 卸载OpenVPN
   hosts: openvpn_servers
   become: yes
@@ -203,7 +204,7 @@ cat > uninstall_openvpn.yml << 'EOF'
         - merge_ovpn.sh
         - ovpn_configs
         - uninstall_openvpn.yml
-        - vpn.txt
+        - /root/vpn.txt
         - /root/port-info.txt
 
     - name: 清理临时目录
@@ -225,7 +226,7 @@ cat > uninstall_openvpn.yml << 'EOF'
         user: root
         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         state: absent
-      ignore_errors: yes        
+      ignore_errors: yes
 EOF
 
 echo -e "${BLUE}4. 创建管理脚本...${NC}"
@@ -235,16 +236,16 @@ cat > manage_openvpn.sh << 'EOF'
 
 case "$1" in
     status)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl status openvpn --no-pager"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl status openvpn-server@server.service"
         ;;
     start)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl start openvpn"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl start openvpn-server@server.service"
         ;;
     stop)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl stop openvpn"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl stop openvpn-server@server.service"
         ;;
     restart)
-        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl restart openvpn"
+        ansible -i ansible_inventory.ini openvpn_servers -m shell -a "systemctl restart openvpn-server@server.service"
         ;;
     uninstall)
         echo "正在卸载OpenVPN..."
