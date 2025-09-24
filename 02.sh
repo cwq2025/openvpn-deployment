@@ -72,7 +72,7 @@ cat > deploy_openvpn.yml << 'EOF'
         export APPROVE_IP=y
         export IPV6_SUPPORT=n
         export PORT_CHOICE=3
-        export PROTOCOL_CHOICE=2
+        export PROTOCOL_CHOICE=1
         export DNS=1
         export COMPRESSION_ENABLED=n
         export CUSTOMIZE_ENC=n
